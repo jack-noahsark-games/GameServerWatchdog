@@ -53,6 +53,33 @@ while True:
     schedule.run_pending()
     time.sleep(1)
     
+processes = {
+    "Discord.exe":{
+        "path": r"C:\Users\jack1\AppData\Local\Discord\app-1.0.9164\Discord.exe",
+        "working_directory": r"C:\Users\jack1\AppData\Local\Discord\app-1.0.9164"
+    },
+
+    "Chrome.exe":{
+        "path": r"C:\Program Files\Google\Chrome\Application\Chrome.exe",
+        "working_directory": r"C:\Program Files\Google\Chrome\Application"
+    },
+    
+    "waterfox.exe":{
+        "path": r"C:\Program Files\Waterfox\waterfox.exe",
+        "working_directory": r"C:\Program Files\Waterfox"
+    }
+}
+
+def is_process_running():
+    for process_name in processes: #this only acccesses the outer dictionary.
+        for process in psutil.process_iter(['pid', 'name']):
+            if process.info['name']== {processes}:
+                print(f"{process_name} is running, checking again in 30 seconds.")
+                return True
+        
+    return False #we put return False here because if we put it as else: false, it only checks one process in the for loop and terminates early
+
+
 
 
 
