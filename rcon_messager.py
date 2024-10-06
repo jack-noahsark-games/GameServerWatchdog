@@ -1,7 +1,7 @@
 from rcon.source import Client
-import datetime
 import schedule
-message_times = ["08:00", "12:00", "18:00" , "00:00"]
+import time
+
 
 rcon_servers = {
     
@@ -23,8 +23,7 @@ rcon_servers = {
     }
 }
 
-time_to_restart = datetime.datetime.now()
-warning_message = "Warning: Server will restart in {time_to_restart} minutes"
+
 def send_warning_message(rcon_servers,details):
     try:
         rcon_ip = details["rcon_ip"]
@@ -32,9 +31,19 @@ def send_warning_message(rcon_servers,details):
         rcon_password = details["rcon_password"]
         
         with Client(rcon_ip, rcon_port, passwd=rcon_password) as client:
-            response = client.run(f"say {warning_message}")
-        
-        
+            response = client.run(f"say Restarting server in 15 minutes.")
+            time.sleep(300)
+            response = client.run(f"say Restarting server in 10 minutes.")
+            time.sleep(300)
+            response = client.run(f"say Restarting server in 5 minutes.")
+            time.sleep(240)
+            response = client.run(f"say Restarting server in 1 minutes.")
+            time.sleep(30)
+            response = client.run(f"say Restarting server in 30 seconds.")
+            time.sleep(30)
+            response = client.run(f"say Restarting server now, please exit the server.")
+            time.sleep(10)
+                
     except Exception as e:
         print(f"Failed to send command")
         
