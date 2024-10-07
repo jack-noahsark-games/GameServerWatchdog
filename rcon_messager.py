@@ -23,31 +23,53 @@ rcon_servers = {
     }
 }
 
+countdown_messages = [
+        (15, "Restarting server in 15 minutes."),
+        (10, "Restarting server in 10 minutes."),
+        (5, "Restarting server in 5 minutes."),
+        (1, "Restarting server in 1 minute."),
+        (0.5, "Restarting server in 30 seconds."),
+        (0, "Restarting server now, please exit the server.")
+    ]
 
-def send_warning_message(rcon_servers,details):
+def send_warning_message(server_details):
     try:
-        rcon_ip = details["rcon_ip"]
-        rcon_port = details["rcon_port"]
-        rcon_password = details["rcon_password"]
+        rcon_ip = server_details["rcon_ip"]
+        rcon_port = server_details["rcon_port"]
+        rcon_password = server_details["rcon_password"]
         
         with Client(rcon_ip, rcon_port, passwd=rcon_password) as client:
-            response = client.run(f"say Restarting server in 15 minutes.")
-            time.sleep(300)
-            response = client.run(f"say Restarting server in 10 minutes.")
-            time.sleep(300)
-            response = client.run(f"say Restarting server in 5 minutes.")
-            time.sleep(240)
-            response = client.run(f"say Restarting server in 1 minutes.")
-            time.sleep(30)
-            response = client.run(f"say Restarting server in 30 seconds.")
-            time.sleep(30)
-            response = client.run(f"say Restarting server now, please exit the server.")
-            time.sleep(10)
+            for minutes, rcon_message in countdown_messages:
+                response = client.run(f"say {rcon_message}.")
                 
+                if minutes >= 5:
+                    response()
+                    time.sleep(300)
+                    
+                elif minutes >= 1:
+                    response()
+                    time.sleep(60)
+                    
+                elif minutes >= 0.5:
+                    response()
+                    time.sleep(30)
+                    
+                elif minutes == 0:
+                    response()
+                    time.sleep(10)
+                    
+                print(response)
+           
     except Exception as e:
         print(f"Failed to send command")
         
         
-        
 
-schedule.every().day.at("10:30").do(send_warning_message)    
+    
+
+schedule.every().day.at("06:00").do(lambda: send_warning_message(rcon_servers["minecraft"]))
+schedule.every().day.at("12:00").do(lambda: send_warning_message(rcon_servers["minecraft"]))
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
