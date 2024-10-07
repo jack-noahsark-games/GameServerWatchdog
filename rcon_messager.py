@@ -40,25 +40,31 @@ def send_warning_message(server_details):
         
         with Client(rcon_ip, rcon_port, passwd=rcon_password) as client:
             for minutes, rcon_message in countdown_messages:
-                response = client.run(f"say {rcon_message}.")
+                
+                chat_command = client.run(f"say {rcon_message}.")
+                shutdown_command = client.run(f"doExit")
                 
                 if minutes >= 5:
-                    response()
+                    chat_command()
                     time.sleep(300)
                     
                 elif minutes >= 1:
-                    response()
+                    chat_command()
                     time.sleep(60)
                     
                 elif minutes >= 0.5:
-                    response()
+                    chat_command()
                     time.sleep(30)
                     
                 elif minutes == 0:
-                    response()
+                    chat_command()
                     time.sleep(10)
+                    shutdown_command()
+                    print(f"Server shutting down now...")
+                    time.sleep(30)
                     
-                print(response)
+                    
+                
            
     except Exception as e:
         print(f"Failed to send command")
