@@ -42,24 +42,34 @@ def send_warning_message(server_details):
         for minutes, rcon_message in countdown_messages:
                 
             chat_feedback = f"say {rcon_message}"
-            chat_command = print(f"say {rcon_message}.")
-
+            skip_input = ""
                 
             if minutes >= 5:
-                chat_feedback()
-
-                time.sleep(300)
+                print(chat_feedback)
+                skip_input = input("Would you like to abort this wait: y/n?")
+                if skip_input == "y":
+                    print("Wait aborted, moving on...")
+                else:
+                    time.sleep(300)
                 
             elif minutes >= 1:
-                chat_feedback()
-                time.sleep(60)
+                print(chat_feedback)
+                skip_input = input("Would you like to abort this wait: y/n?")
+                if skip_input == "y":
+                    print("Wait aborted, moving on...")
+                else:
+                    time.sleep(60)
                 
             elif minutes >= 0.5:
-                chat_feedback()
-                time.sleep(30)
+                print(chat_feedback)
+                skip_input = input("Would you like to abort this wait: y/n?")
+                if skip_input == "y":
+                    print("Wait aborted, moving on...")
+                else:
+                    time.sleep(30)
                 
             elif minutes == 0:
-                chat_feedback()
+                print(chat_feedback)
                 time.sleep(10)
                 print(f"Server shutting down now...")
                 time.sleep(30)
