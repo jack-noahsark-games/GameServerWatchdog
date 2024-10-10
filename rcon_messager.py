@@ -1,6 +1,7 @@
 from rcon.source import Client
 import schedule
 import time
+import threading
 
 
 rcon_servers = {
@@ -23,7 +24,7 @@ rcon_servers = {
     }
 }
 
-countdown_messages = [
+countdown_messages = [ #dictionary for the countdown messages, purpose - iterating through them
         (15, "Restarting server in 15 minutes."),
         (10, "Restarting server in 10 minutes."),
         (5, "Restarting server in 5 minutes."),
@@ -34,6 +35,7 @@ countdown_messages = [
 
 def send_warning_message(server_details):
     try:
+        #these variables are not relevant for this current testing purpose, but once we switch from print to rcon.client(run) they will become relevant
         rcon_ip = server_details["rcon_ip"]
         rcon_port = server_details["rcon_port"]
         rcon_password = server_details["rcon_password"]
