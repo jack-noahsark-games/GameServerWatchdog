@@ -31,7 +31,13 @@ def abort_check():
     global abort, flag
 
 
+
     while True:
+        
+        if flag:
+            print("Flag is true, for loop finished, abort_check restarting now and waiting for the next for loop to finish")
+            flag = False
+            time.sleep(5)
         print("abort_check started")
         user_input = input(f"Would you like to abort this wait: y/n?")
         
@@ -39,10 +45,7 @@ def abort_check():
             abort = True
             print("Aborting...")
         
-        elif flag:
-            print("Flag is true, for loop finished, abort_check restarting now and waiting for the next for loop to finish")
-            flag = False
-            time.sleep(5)
+
 
         elif user_input == "n":
             print("Script will continue to wait...")
@@ -73,15 +76,14 @@ def send_warning_message(server_details):
         
         for minutes, rcon_message in countdown_messages:               
             chat_feedback = f"say {rcon_message}"
-            print(f"Next iteration {minutes}")
+            
             if minutes >= 5:
                 print(chat_feedback)
-                for _ in range(30):
+                for _ in range(1):
                     print("10 seconds wait")
                     time.sleep(10)
                     if abort:
                         abort = False
-                        print(abort)
                         print("Wait aborted during countdown")
                         break
                 else:
@@ -89,14 +91,14 @@ def send_warning_message(server_details):
                     
             elif minutes >= 1:
                 print(chat_feedback)
-                for _ in range(6):
+                for _ in range(1):
                     print("10 seconds wait")
                     time.sleep(10)
                     if abort:
                         print("Wait aborted during countdown")
                         abort = False
                         break
-                else:
+              
                     flag = True  
                                   
             elif minutes >= 0.5:
@@ -108,7 +110,7 @@ def send_warning_message(server_details):
                         abort = False
                         print("Wait aborted during countdown")
                         break
-                else:
+                
                     flag = True
                 
             elif minutes == 0:
@@ -119,7 +121,7 @@ def send_warning_message(server_details):
                         abort = False
                         print("Wait aborted during countdown")
                         break
-                else:
+               
                     flag = True
                     
     except Exception as e:
