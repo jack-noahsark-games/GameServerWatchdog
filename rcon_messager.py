@@ -23,6 +23,16 @@ rcon_servers = {
         
     }
 }
+countdown_messages = [ #dictionary for the countdown messages, purpose - iterating through them
+        (15, "Restarting server in 15 minutes."),
+        (10, "Restarting server in 10 minutes."),
+        (5, "Restarting server in 5 minutes."),
+        (1, "Restarting server in 1 minute."),
+        (0.5, "Restarting server in 30 seconds."),
+        (0, "Restarting server now, please exit the server.")
+        
+    ]
+
 
 abort = False
 loop_completed = False
@@ -33,7 +43,7 @@ def abort_check():
 
 
     while True:
-        time.sleep(1)
+        time.sleep(10)
         user_input = input(f"Would you like to abort this wait: y/n?")
         
         if user_input.lower() == "y":
@@ -49,20 +59,10 @@ def prompt_abort_input():
     global loop_completed
     while True:   
         if loop_completed:
-            time.sleep(1)
-            print("Would you like to abort this wait: y/n?")
+            time.sleep(10)
+            print("Would you like to abort this wit: y/n?")
             loop_completed = False
-            time.sleep(1)
 
-countdown_messages = [ #dictionary for the countdown messages, purpose - iterating through them
-        (15, "Restarting server in 15 minutes."),
-        (10, "Restarting server in 10 minutes."),
-        (5, "Restarting server in 5 minutes."),
-        (1, "Restarting server in 1 minute."),
-        (0.5, "Restarting server in 30 seconds."),
-        (0, "Restarting server now, please exit the server.")
-        
-    ]
 
 
 def send_warning_message(server_details):
@@ -81,7 +81,7 @@ def send_warning_message(server_details):
             
             if minutes >= 5:
                 print(chat_feedback)
-                for _ in range(30):
+                for _ in range(1):
                     time.sleep(10)
                     if abort:
                         abort = False
@@ -120,8 +120,6 @@ def send_warning_message(server_details):
                         abort = False
                         print("Wait aborted during countdown")
                         break
-                else:
-                    loop_completed = True
                     
     except Exception as e:
         print(f"failed with {e}")
