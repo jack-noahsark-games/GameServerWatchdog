@@ -25,32 +25,34 @@ rcon_servers = {
 }
 
 abort = False
-flag = False
+loop_completed = False
 
 def abort_check():
-    global abort, flag
+    global abort, loop_completed
 
 
 
     while True:
-        
-        if flag:
-            print("Flag is true, for loop finished, abort_check restarting now and waiting for the next for loop to finish")
-            flag = False
-            time.sleep(5)
-        print("abort_check started")
+        time.sleep(1)
         user_input = input(f"Would you like to abort this wait: y/n?")
         
         if user_input.lower() == "y":
             abort = True
             print("Aborting...")
-        
-
 
         elif user_input == "n":
             print("Script will continue to wait...")
         else:
             print(f"{user_input} is not a valid character, please choose y or n: ")
+
+def prompt_abort_input():
+    global loop_completed
+    while True:   
+        if loop_completed:
+            time.sleep(1)
+            print("Would you like to abort this wait: y/n?")
+            loop_completed = False
+            time.sleep(1)
 
 countdown_messages = [ #dictionary for the countdown messages, purpose - iterating through them
         (15, "Restarting server in 15 minutes."),
@@ -67,7 +69,7 @@ def send_warning_message(server_details):
 
     
     try:
-        global abort, flag
+        global abort, loop_completed
         rcon_ip = server_details["rcon_ip"]
         rcon_port = server_details["rcon_port"]
         rcon_password = server_details["rcon_password"]
@@ -79,39 +81,36 @@ def send_warning_message(server_details):
             
             if minutes >= 5:
                 print(chat_feedback)
-                for _ in range(1):
-                    print("10 seconds wait")
+                for _ in range(30):
+                    time.sleep(10)
+                    if abort:
+                        abort = False
+                        print("Wait aborted during countdown")
+                        break
+                else:    
+                    loop_completed = True
+                    
+            elif minutes >= 1:
+                print(chat_feedback)
+                for _ in range(6):
+                    time.sleep(10)
+                    if abort:
+                        print("Wait aborted during countdown")
+                        abort = False
+                        break
+                else:
+                    loop_completed = True  
+                                  
+            elif minutes >= 0.5:
+                print(chat_feedback)    
+                for _ in range (3):
                     time.sleep(10)
                     if abort:
                         abort = False
                         print("Wait aborted during countdown")
                         break
                 else:
-                    flag = True
-                    
-            elif minutes >= 1:
-                print(chat_feedback)
-                for _ in range(1):
-                    print("10 seconds wait")
-                    time.sleep(10)
-                    if abort:
-                        print("Wait aborted during countdown")
-                        abort = False
-                        break
-              
-                    flag = True  
-                                  
-            elif minutes >= 0.5:
-                print(chat_feedback)    
-                for _ in range (3):
-                    print("10 seconds wait")
-                    time.sleep(10)
-                    if abort:
-                        abort = False
-                        print("Wait aborted during countdown")
-                        break
-                
-                    flag = True
+                    loop_completed = True
                 
             elif minutes == 0:
                 print(chat_feedback)
@@ -121,15 +120,17 @@ def send_warning_message(server_details):
                         abort = False
                         print("Wait aborted during countdown")
                         break
-               
-                    flag = True
+                else:
+                    loop_completed = True
                     
     except Exception as e:
         print(f"failed with {e}")
     finally:
         abort = False
+        loop_completed = True
         
 threading.Thread(target=abort_check, daemon=True).start()
+threading.Thread(target=prompt_abort_input, daemon=True).start()
 
 
 send_warning_message(rcon_servers["minecraft"])
